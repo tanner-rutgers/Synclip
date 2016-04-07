@@ -25,22 +25,24 @@ function showSentClipboardNotification(content) {
 function sendClipboard(content) {
     console.log("Saving clipboard content: " + content);
     var clipboard = {};
-    clipboard[STORAGE_KEY] = {content: content};
     chrome.instanceID.getID(function(id) {
         if (chrome.runtime.lastError) {
             console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
             return;
         }
-        clipboard[STORAGE_KEY].from = id;
-    });
-    chrome.storage.sync.set(clipboard, function() {
-        if (chrome.runtime.lastError) {
-            console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
-            return;
+        clipboard[STORAGE_KEY] = {
+            content: content,
+            from: id
         }
-        // Notify that we saved.
-        console.log('Saved clipboard content');
-        showSentClipboardNotification(content);
+        chrome.storage.sync.set(clipboard, function() {
+            if (chrome.runtime.lastError) {
+                console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
+                return;
+            }
+            // Notify that we saved.
+            console.log('Saved clipboard content');
+            showSentClipboardNotification(content);
+        });
     });
 }
 
