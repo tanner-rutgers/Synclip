@@ -20,11 +20,13 @@ function showSentClipboardNotification(content) {
 
 /**
  * Saves given content to file sync
- * @param content String content to publishs
+ * @param content String content to publish
  */
 function sendClipboard(content) {
     console.log("Saving clipboard content: " + content);
-    chrome.storage.sync.set({STORAGE_KEY: content}, function() {
+    var clipboard = {};
+    clipboard[STORAGE_KEY] = content;
+    chrome.storage.sync.set(clipboard, function() {
         if (chrome.runtime.lastError) {
             console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
             return;
@@ -61,7 +63,7 @@ function copyToClipboard() {
     console.log("Retrieving saved clipboard content");
     chrome.storage.sync.get(STORAGE_KEY, function(content) {
         var sandbox = document.getElementById("sandbox");
-        sandbox.value = content.STORAGE_KEY;
+        sandbox.value = content[STORAGE_KEY];
         sandbox.select();
         if (document.execCommand("copy")) {
             console.log("Copied content to clipboard");
@@ -104,8 +106,8 @@ function showNewContentNotification(content) {
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     console.log("Storage change detected");
     console.log(changes);
-    if (areaName === "sync" && changes.STORAGE_KEY) {
-        var change = changes.STORAGE_KEY;
+    if (changes[STORAGE_KEY]) {
+        var change = changes[STORAGE_KEY];
         showNewContentNotification(change.newValue);
     }
 });
