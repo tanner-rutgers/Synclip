@@ -26,7 +26,7 @@ function sendClipboard(content) {
     console.log("Saving clipboard content: " + content);
     chrome.storage.sync.set({STORAGE_KEY: content}, function() {
         if (chrome.runtime.lastError) {
-            console.log("Error saving clipboard content: " + chrome.runtime.lastError.message);
+            console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
             return;
         }
         // Notify that we saved.
@@ -40,18 +40,36 @@ function sendClipboard(content) {
  * @param callback Callback function to accept retrieved content
  */
 function getClipboardContent(callback) {
-    console.log("Retrieving content from clipboard");
+    console.log("Retrieving content from client clipboard");
     var sandbox = document.getElementById("sandbox");
     var result = '';
     sandbox.select();
     if (document.execCommand("paste")) {
         result = sandbox.value;
-        console.log("Retrieved data from clipboard: " + result);
+        console.log("Retrieved data from client clipboard: " + result);
     } else {
-        console.log("Error pasting clipboard");
+        console.error("Error pasting client clipboard");
     }
     sandbox.value = '';
     callback(result);
+}
+
+/**
+ * Copy saved clipboard content to client clipboard
+ */
+function copyToClipboard() {
+    console.log("Retrieving saved clipboard content");
+    chrome.storage.sync.get(STORAGE_KEY, function(content) {
+        var sandbox = document.getElementById("sandbox");
+        sandbox.value = context.STORAGE_KEY;
+        sandbox.select();
+        if (document.execCommand("copy")) {
+            console.log("Copied content to clipboard");
+        } else {
+            console.error("Error copying content to clipboard");
+        }
+        sandbox.value = '';
+    })
 }
 
 /**
@@ -91,3 +109,13 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
         showNewContentNotification(change.newValue);
     }
 });
+
+chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex) {
+    if (notificationId === NEW_NOTIFICATION_ID) {
+        if (buttonIndex === 0) {
+            copyToClipboard();
+        } else if (buttonIndex === 1) {
+            chrome.notifications.clear(NEW_NOTIFICATION_ID);
+        }
+    }
+})
