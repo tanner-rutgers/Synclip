@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "ClipSync",
+  "description": "This extension allows sending text in your clipboard to other Chrome instances",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "name": "Click to publish clipboard"
+  },
+
+  "background": {
+    "persistent": false,
+    "page": "background.html"
+  },
+
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "storage",
+    "notifications"
+  ]
+}
