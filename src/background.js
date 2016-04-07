@@ -25,7 +25,14 @@ function showSentClipboardNotification(content) {
 function sendClipboard(content) {
     console.log("Saving clipboard content: " + content);
     var clipboard = {};
-    clipboard[STORAGE_KEY] = content;
+    clipboard[STORAGE_KEY] = {content: content};
+    chrome.instanceID.getID(function(id) {
+        if (chrome.runtime.lastError) {
+            console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
+            return;
+        }
+        clipboard[STORAGE_KEY].from = id;
+    });
     chrome.storage.sync.set(clipboard, function() {
         if (chrome.runtime.lastError) {
             console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
@@ -105,10 +112,20 @@ function showNewContentNotification(content) {
  */
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     console.log("Storage change detected");
-    console.log(changes);
     if (changes[STORAGE_KEY]) {
-        var change = changes[STORAGE_KEY];
-        showNewContentNotification(change.newValue);
+        chrome.instanceID.getID(function (id) {
+            if (chrome.runtime.lastError) {
+                console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
+                return;
+            }
+            var change = changes[STORAGE_KEY];
+            if (id !== change.newValue.from) {
+                console.log("Content is from other client");
+                showNewContentNotification(change.newValue.content);
+            } else {
+                console.log("Content was from us, no action taken");
+            }
+        });
     }
 });
 
