@@ -72,7 +72,7 @@ function copyToClipboard() {
     console.log("Retrieving saved clipboard content");
     chrome.storage.sync.get(STORAGE_KEY, function(content) {
         var sandbox = document.getElementById("sandbox");
-        sandbox.value = content[STORAGE_KEY];
+        sandbox.value = content[STORAGE_KEY].content;
         sandbox.select();
         if (document.execCommand("copy")) {
             console.log("Copied content to clipboard");
