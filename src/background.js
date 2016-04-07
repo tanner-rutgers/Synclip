@@ -57,10 +57,11 @@ function showNewContentNotification(content) {
     });
 }
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener(function(changes, areaName) {
     console.log("Storage change detected");
-    if (changes[STORAGE_KEY]) {
-        var change = changes[STORAGE_KEY];
+    console.log(changes);
+    if (areaName === "sync" && changes.STORAGE_KEY) {
+        var change = changes.STORAGE_KEY;
         showNewContentNotification(change.newValue);
     }
 });
