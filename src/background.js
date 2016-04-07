@@ -1,6 +1,22 @@
 var CLIPBOARD_FILE = "clipboard.txt";
-var NOTIFICATION_ID = "clipSync_notification";
+var NEW_NOTIFICATION_ID = "clipSync_notification_new";
+var SENT_NOTIFICATION_ID = "clipSync_notification_sent";
 var STORAGE_KEY = "clipSync_clipboard";
+
+/**
+ * Show notification when new content is sent
+ * @param content
+ */
+function showSentClipboardNotification(content) {
+    console.log("Showing sent clipboard notification");
+    var options = {
+        type: "basic",
+        title: "ClipSync clipboard",
+        message: "Sent: " + content,
+        iconUrl: "icon.png"
+    };
+    chrome.notifications.create(SENT_NOTIFICATION_ID, options);
+}
 
 /**
  * Saves given content to file sync
@@ -15,6 +31,7 @@ function sendClipboard(content) {
         }
         // Notify that we saved.
         console.log('Saved clipboard content');
+        showSentClipboardNotification(content);
     });
 }
 
@@ -37,6 +54,9 @@ function getClipboardContent(callback) {
     callback(result);
 }
 
+/**
+ * Listen for extension click events
+ */
 chrome.browserAction.onClicked.addListener(function(tab) {
     console.log("Extension activated");
     getClipboardContent(function(content) {
@@ -44,19 +64,25 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     })
 });
 
+/**
+ * Show notification when new content is received
+ * @param content
+ */
 function showNewContentNotification(content) {
     console.log("Showing new content notification");
     var options = {
         type: "basic",
-        title: "New ClipSync content!",
-        message: content,
-        iconUrl: "icon.png"
+        title: "ClipSync clipboard",
+        message: "Received: " + content,
+        iconUrl: "icon.png",
+        buttons: [{title: "Copy"}, {title: "Dismiss"}]
     };
-    chrome.notifications.clear(NOTIFICATION_ID, function() {
-        chrome.notifications.create(NOTIFICATION_ID, options);
-    });
+    chrome.notifications.create(NEW_NOTIFICATION_ID, options);
 }
 
+/**
+ * Listen for storage changes
+ */
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     console.log("Storage change detected");
     console.log(changes);
