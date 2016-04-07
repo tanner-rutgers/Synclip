@@ -135,8 +135,7 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, button
     if (notificationId === NEW_NOTIFICATION_ID) {
         if (buttonIndex === 0) {
             copyToClipboard();
-        } else if (buttonIndex === 1) {
-            chrome.notifications.clear(NEW_NOTIFICATION_ID);
         }
+        chrome.notifications.clear(NEW_NOTIFICATION_ID);
     }
-})
+});
