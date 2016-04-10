@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ClipSync</title>
+    <script src="popup.js"></script>
+    <style>
+        body {
+            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+            text-align: center;
+            min-width: 200px;
+        }
+        #status {
+            /* avoid an excessively wide status text */
+            white-space: pre;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Current clipboard</h3>
+    <p id="clipboard"></p>
+    <textarea id="sandbox" style="display: none"></textarea>
+    <form id="clipboardForm">
+        <input type="submit" value="Sync"/>
+    </form>
+</body>
+
+</html>
