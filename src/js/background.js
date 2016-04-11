@@ -1,16 +1,44 @@
 var DEBUG = true;
 
 var NEW_NOTIFICATION_ID = "clipSync_notification_new";
-var CLIPBOARD_PREFIX = "clipSync_clipboard_";
 var IDS_KEY = "clipSync_ids";
 
 var currentContent;
+var clipboardHistory = [];
+
+/**
+ * Load previously saved clipboards into memory
+ */
+function loadHistory(callback) {
+    console.log("Loading clipboard history");
+    clipboardHistory = [];
+    getClipboardIds(function(ids) {
+        ids.forEach(function(id, index) {
+            getClipboard(id, function(clipboard) {
+                clipboardHistory.push(clipboard);
+                if (index == ids.length - 1) {
+                    typeof callback === 'function' && callback();
+                }
+            });
+        });
+    })
+}
+
+/**
+ * Returns currently loaded clipboardHistory
+ * @returns {Array} Array of clipboards
+ */
+function getLoadedHistory() {
+    console.log("Sharing loaded clipboardHistory");
+    console.log(clipboardHistory);
+    return clipboardHistory;
+}
 
 /**
  * Copy saved clipboard content to client clipboard
  */
-function copyToClipboard() {
-    console.log("Copying content to clipboard");
+function copyToClipboard(content) {
+    console.log("Copying content to clipboard: " + content);
     var sandbox = document.getElementById("sandbox");
     sandbox.value = content;
     sandbox.select();
@@ -32,27 +60,12 @@ function showNewContentNotification(content) {
         type: "basic",
         title: "ClipSync",
         message: "Received: " + content,
-        iconUrl: "icon.png",
+        iconUrl: "../resources/icon.png",
         buttons: [{title: "Copy"}, {title: "Dismiss"}]
     };
     chrome.notifications.create(NEW_NOTIFICATION_ID, options);
 }
 
-/**
- *
- * @param id
- * @param callback
- */
-function getClipboard(id, callback) {
-    console.log("Retrieving clipboard with id: " + id);
-    chrome.storage.sync.get(CLIPBOARD_PREFIX + id, function(clipboard) {
-        if (chrome.runtime.lastError) {
-            error("Error retrieving clipboard: " + chrome.runtime.lastError.message);
-            return;
-        }
-        callback(clipboard[CLIPBOARD_PREFIX + id]);
-    })
-}
 
 /**
  * Listen for storage changes
@@ -81,11 +94,16 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
     }
 });
 
+/**
+ * Listen for notification button events
+ */
 chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex) {
     if (notificationId === NEW_NOTIFICATION_ID) {
         if (buttonIndex === 0) {
-            copyToClipboard();
+            copyToClipboard(currentContent);
         }
         chrome.notifications.clear(NEW_NOTIFICATION_ID);
     }
 });
+
+loadHistory();

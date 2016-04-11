@@ -1,0 +1,54 @@
+body {
+    font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+    text-align: center;
+}
+.nav li a {
+    outline: none;
+}
+.container {
+    padding: 10px;
+}
+.tab-pane {
+    padding: 10px;
+}
+.box {
+    position: relative;
+    margin: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px #ccc;
+    overflow: auto;
+    width: 200px;
+    max-height: 200px;
+}
+.content {
+    margin: 0.5em auto;
+    text-align: left;
+    white-space: pre;
+    text-overflow: ellipsis;
+    font-size: x-small;
+}
+#noHistory p {
+    font-style: italic;
+}
+#carousel ul {
+    padding-left: 0;
+    list-style: none;
+}
+#carousel li {
+    display: none;
+}
+#carousel li.current {
+    display: inline;
+}
+button {
+    margin: 0 10px;
+    display: inline-block;
+}
+button[disabled=disabled], button:disabled {
+    opacity: 0.4;
+}
+#buttons {
+    margin: 0 auto;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ClipSync</title>
+    <script src="../js/jquery-1.12.3.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/popup.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/popup.css">
+</head>
+
+<body>
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#clipboardTab">Clipboard</a></li>
+        <li><a data-toggle="tab" href="#historyTab">History</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="clipboardTab" class="tab-pane fade in active">
+            <div class="box">
+                <p id="clipboard" class="content"></p>
+            </div>
+            <textarea id="sandbox" style="display: none"></textarea>
+            <form id="clipboardForm">
+                <input type="submit" value="Sync"/>
+            </form>
+        </div>
+        <div id="historyTab" class="tab-pane fade">
+            <div id="noHistory">
+                <div class="box">
+                    <p class="content">No History...</p>
+                </div>
+            </div>
+            <div id="history" hidden>
+                <div id="carousel" class="box">
+                    <ul id="historyList" class="content">
+                    </ul>
+                </div>
+                <div id="buttons">
+                    <button id="prev" disabled>
+                        &lt;
+                    </button>
+                    <form id="historyForm" style="display: inline-block">
+                        <input type="submit" value="Copy"/>
+                    </form>
+                    <button id="next" disabled>
+                        &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
