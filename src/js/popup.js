@@ -68,7 +68,6 @@ function sendClipboard() {
 function showClipboardContent() {
     log("Retrieving and showing content from client clipboard");
     var sandbox = document.getElementById("sandbox");
-    sandbox.style.display = "block";
     var result = '';
     sandbox.select();
     if (document.execCommand("paste")) {
@@ -79,7 +78,6 @@ function showClipboardContent() {
         error("Error pasting client clipboard");
     }
     sandbox.value = '';
-    sandbox.style.display = "none";
 }
 
 /**
@@ -171,8 +169,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("historyForm").addEventListener("submit", function(event) {
         event.preventDefault();
         backgroundPage.copyToClipboard(selectedHistory);
+        document.getElementById('clipboard').textContent = selectedHistory;
     });
     showClipboardContent();
     showHistory();
     loadCarousel();
+});
+
+/**
+ * Repopulate clipboard element on new copy
+ */
+document.addEventListener('copy', function() {
+    log("Showing current selection");
+    var selected = window.getSelection().toString();
+    document.getElementById('clipboard').textContent = selected;
 });

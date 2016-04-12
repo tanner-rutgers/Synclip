@@ -52,3 +52,7 @@ button[disabled=disabled], button:disabled {
 #buttons {
     margin: 0 auto;
 }
+#sandbox {
+    position: absolute;
+    left: -2000px;
+}
