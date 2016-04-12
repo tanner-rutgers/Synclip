@@ -19,33 +19,39 @@
 
     <div class="tab-content">
         <div id="clipboardTab" class="tab-pane fade in active">
-            <div class="box">
-                <p id="clipboard" class="content"></p>
+            <div class="panel panel-default box">
+                <div class="panel-body">
+                    <p id="clipboard" class="content"></p>
+                </div>
             </div>
             <textarea id="sandbox"></textarea>
             <form id="clipboardForm">
-                <input type="submit" value="Sync"/>
+                <input type="submit" value="Sync" class="btn btn-primary btn-outline"/>
             </form>
         </div>
         <div id="historyTab" class="tab-pane fade">
             <div id="noHistory">
-                <div class="box">
-                    <p class="content">No History...</p>
+                <div class="panel panel-default box">
+                    <div class="panel-body">
+                        <p class="content">No History...</p>
+                    </div>
                 </div>
             </div>
             <div id="history" hidden>
-                <div id="carousel" class="box">
-                    <ul id="historyList" class="content">
-                    </ul>
+                <div id="carousel" class="panel panel-default box">
+                    <div class="panel-body">
+                        <ul id="historyList" class="content">
+                        </ul>
+                    </div>
                 </div>
                 <div id="buttons">
-                    <button id="prev" disabled>
+                    <button id="prev" class="btn btn-primary btn-outline" disabled>
                         &lt;
                     </button>
                     <form id="historyForm" style="display: inline-block">
-                        <input type="submit" value="Copy"/>
+                        <input type="submit" value="Copy" class="btn btn-primary btn-outline"/>
                     </form>
-                    <button id="next" disabled>
+                    <button id="next" class="btn btn-primary btn-outline" disabled>
                         &gt;
                     </button>
                 </div>

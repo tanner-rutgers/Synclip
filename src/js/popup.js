@@ -158,19 +158,30 @@ function loadCarousel() {
 }
 
 /**
- * Perfom actions once popup is loaded
+ * Perfom initialization once popup is loaded
  */
 document.addEventListener('DOMContentLoaded', function() {
     log("Extension activated");
+    // Add submit listener to clipboard sync
     document.getElementById("clipboardForm").addEventListener("submit", function(event) {
         event.preventDefault();
         sendClipboard();
     });
+    // Add submit listener to history copy
     document.getElementById("historyForm").addEventListener("submit", function(event) {
         event.preventDefault();
         backgroundPage.copyToClipboard(selectedHistory);
         document.getElementById('clipboard').textContent = selectedHistory;
     });
+    // Prevent buttons from keeping focus
+    var buttons = document.getElementsByClassName("btn");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("mousedown", function(event) {
+            event.preventDefault();
+            buttons[i].blur();
+        })
+    }
+    // Populate content
     showClipboardContent();
     showHistory();
     loadCarousel();
