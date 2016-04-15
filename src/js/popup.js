@@ -3,12 +3,15 @@ var HISTORY_SIZE = 5;
 
 var selectedHistory;
 
-var backgroundPage = chrome.extension.getBackgroundPage();
 function log(message) {
-    backgroundPage.console.log(message);
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        backgroundPage.console.log(message);
+    });
 }
 function error(message) {
-    backgroundPage.console.error(message);
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        backgroundPage.console.error(message);
+    });
 }
 
 /**
@@ -25,55 +28,60 @@ function sendClipboard() {
             return;
         }
         // Get list of saved clipboard ids
-        backgroundPage.getClipboardIds(function(ids) {
-            var nextId = 1;
-            if (ids.length > 0) {
-                nextId = ids[ids.length - 1] + 1;
-            }
-            ids.push(nextId);
-            // If clipboard is full, remove oldest
-            if (ids.length > HISTORY_SIZE) {
-                backgroundPage.removeClipboardWithId(ids.shift());
-            }
-            // Save new clipboard
-            var clipboard = {};
-            clipboard[CLIPBOARD_PREFIX + nextId] = {
-                content: content,
-                from: id
-            };
-            log("Saving clipboard " + (CLIPBOARD_PREFIX + nextId));
-            chrome.storage.sync.set(clipboard, function() {
-                if (chrome.runtime.lastError) {
-                    error("Error saving clipboard content: " + chrome.runtime.lastError.message);
-                    return;
+        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.getClipboardIds(function (ids) {
+                var nextId = 1;
+                if (ids.length > 0) {
+                    nextId = ids[ids.length - 1] + 1;
                 }
-                // Notify that we saved.
-                log('Saved clipboard with id: ' + nextId);
-                // Save new clipboard ids
-                backgroundPage.saveClipboardIds(ids, function() {
-                    backgroundPage.loadHistory(function() {
-                        showHistory();
-                        loadCarousel();
+                ids.push(nextId);
+                // If clipboard is full, remove oldest
+                if (ids.length > HISTORY_SIZE) {
+                    backgroundPage.removeClipboardWithId(ids.shift());
+                }
+                // Save new clipboard
+                var clipboard = {};
+                clipboard[CLIPBOARD_PREFIX + nextId] = {
+                    content: content,
+                    from: id
+                };
+                log("Saving clipboard " + (CLIPBOARD_PREFIX + nextId));
+                chrome.storage.sync.set(clipboard, function () {
+                    if (chrome.runtime.lastError) {
+                        error("Error saving clipboard content: " + chrome.runtime.lastError.message);
+                        return;
+                    }
+                    // Notify that we saved.
+                    log('Saved clipboard with id: ' + nextId);
+                    // Save new clipboard ids
+                    backgroundPage.saveClipboardIds(ids, function () {
+                        backgroundPage.loadHistory(function () {
+                            showHistory(function() {
+                                loadCarousel();
+                            });
+                        });
                     });
                 });
             });
-        })
+        });
     });
 }
 
 /**
- * Retrieves clipboard content
+ * Retrieves and shows clipboard content
  * @param callback Callback function to accept retrieved content
  */
-function showClipboardContent() {
+function showClientClipboard() {
     log("Retrieving and showing content from client clipboard");
     var sandbox = document.getElementById("sandbox");
     var result = '';
     sandbox.select();
     if (document.execCommand("paste")) {
         result = sandbox.value;
-        document.getElementById('clipboard').textContent = result;
-        log("Retrieved data from client clipboard: " + result);
+        if (result && result.length > 0) {
+            populateClipboardUI(result);
+            log("Retrieved data from client clipboard: " + result);
+        }
     } else {
         error("Error pasting client clipboard");
     }
@@ -81,28 +89,41 @@ function showClipboardContent() {
 }
 
 /**
+ * Populate clipboard content in Clipboard tab
+ * @param value Value to populate
+ */
+function populateClipboardUI(value) {
+    log("Populating clipboard UI with: " + value);
+    document.getElementById('clipboard').textContent = value;
+    document.getElementById('sync').style.display = "block";
+}
+
+/**
  * Retrieves and shows clipboard history
  */
-function showHistory() {
+function showHistory(callback) {
     log("Retrieving and showing clipboard history");
     var ul = document.getElementById("historyList");
-    var history = backgroundPage.getLoadedHistory();
-    if (history.length <= 0) {
-        document.getElementById("noHistory").hidden = false;
-        document.getElementById("history").hidden = true;
-    } else {
-        document.getElementById("noHistory").hidden = true;
-        document.getElementById("history").hidden = false;
-        ul.innerHTML = '';
-        for (var i = 0; i < history.length; i++) {
-            var li = document.createElement("li");
-            li.appendChild(document.createTextNode(history[i].content));
-            if (i == history.length - 1) {
-                li.classList.add('current');
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        var history = backgroundPage.getLoadedHistory();
+        if (history.length <= 0) {
+            document.getElementById("noHistory").style.display = "block";
+            document.getElementById("history").style.display = "none";
+        } else {
+            document.getElementById("noHistory").style.display = "none";
+            document.getElementById("history").style.display = "block";
+            ul.innerHTML = '';
+            for (var i = 0; i < history.length; i++) {
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(history[i].content));
+                if (i == history.length - 1) {
+                    li.classList.add('current');
+                }
+                ul.appendChild(li);
             }
-            ul.appendChild(li);
         }
-    }
+        callback();
+    });
 }
 
 /**
@@ -170,21 +191,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add submit listener to history copy
     document.getElementById("historyForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        backgroundPage.copyToClipboard(selectedHistory);
-        document.getElementById('clipboard').textContent = selectedHistory;
+        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+            backgroundPage.copyToClipboard(selectedHistory);
+            populateClipboardUI(selectedHistory);
+        });
     });
     // Prevent buttons from keeping focus
     var buttons = document.getElementsByClassName("btn");
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("mousedown", function(event) {
             event.preventDefault();
-            buttons[i].blur();
         })
     }
     // Populate content
-    showClipboardContent();
-    showHistory();
-    loadCarousel();
+    showClientClipboard();
+    showHistory(function() {
+        loadCarousel();
+    });
 });
 
 /**
@@ -193,5 +216,5 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('copy', function() {
     log("Showing current selection");
     var selected = window.getSelection().toString();
-    document.getElementById('clipboard').textContent = selected;
+    populateClipboardUI(selected);
 });

@@ -21,13 +21,15 @@
         <div id="clipboardTab" class="tab-pane fade in active">
             <div class="panel panel-default box">
                 <div class="panel-body">
-                    <p id="clipboard" class="content"></p>
+                    <p id="clipboard" class="content">No text in clipboard...</p>
                 </div>
             </div>
             <textarea id="sandbox"></textarea>
-            <form id="clipboardForm">
-                <input type="submit" value="Sync" class="btn btn-primary btn-outline"/>
-            </form>
+            <div id="sync" style="display: none">
+                <form id="clipboardForm">
+                    <input type="submit" value="Sync" class="btn btn-primary btn-outline"/>
+                </form>
+            </div>
         </div>
         <div id="historyTab" class="tab-pane fade">
             <div id="noHistory">
@@ -37,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div id="history" hidden>
+            <div id="history" style="display: none">
                 <div id="carousel" class="panel panel-default box">
                     <div class="panel-body">
                         <ul id="historyList" class="content">
