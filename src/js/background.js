@@ -59,8 +59,8 @@ function showNewContentNotification(content) {
     var options = {
         type: "basic",
         title: "ClipSync",
-        message: "Received: " + content,
-        iconUrl: "../resources/icon.png",
+        message: content,
+        iconUrl: "../resources/icon80.png",
         buttons: [{title: "Copy"}, {title: "Dismiss"}]
     };
     chrome.notifications.create(NEW_NOTIFICATION_ID, options);
