@@ -21,7 +21,6 @@
   },
 
   "background": {
-    "persistent": false,
     "page": "pages/background.html"
   },
 
@@ -30,7 +29,8 @@
     "clipboardWrite",
     "storage",
     "notifications",
-    "gcm"
+    "gcm",
+    "background"
   ],
 
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAugiBmo15J29FUgjpA3YY9ctcpXZl9LEXQLHd3+lv6sWs3P/LBy3rEK9J2bGl/sfmjsB6kygCWMdgOkxPJQGymBoeNTgSccgdIuJrmWU4yFJwBDxFFoa65NmAWlGfoq/T54G69viMm0sIYQD+PUPSMDbrG+TKYhM63J5WuvxA8jIknaBU+gu+zvjVEaYGdUFM4/L9mUv1qHGXZOy6awBbbWSP/V2Bper/Il36bzG5xBuUELXNQ+CrF7wCKliI7CgCi+JxZTc8hjmUE0oVMED/dvDR2jARFXzu5KZv108iKDLw7h1KVNMQzkyNg22IGk3XAKSW78sjZ3J3asxYujwm6wIDAQAB"

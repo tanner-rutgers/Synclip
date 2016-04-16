@@ -2,6 +2,8 @@ var DEBUG = true;
 
 var NEW_NOTIFICATION_ID = "clipSync_notification_new";
 var IDS_KEY = "clipSync_ids";
+var CLIPBOARD_PREFIX = "clipSync_clipboard_";
+var HISTORY_SIZE = 5;
 
 var lastTextContent;
 var currentContent;
@@ -51,6 +53,33 @@ function copyToClipboard(content) {
 }
 
 /**
+ * Get and return current client clipboard content
+ * @param callback Callback accepting content
+ */
+function getClientClipboard(callback) {
+    console.log("Retrieving content from client clipboard");
+    var sandbox = document.getElementById("sandbox");
+    var result = '';
+    sandbox.select();
+    if (document.execCommand("paste")) {
+        result = sandbox.value;
+        if (result && result.length > 0) {
+            console.log("Retrieved data from client clipboard: " + result);
+            lastTextContent = result;
+            callback(result);
+        } else if (lastTextContent && lastTextContent.length > 0) {
+            console.log("Retrieved last copied text from history: " + lastTextContent);
+            callback(lastTextContent);
+        } else {
+            console.log("No text in clipboard or history");
+        }
+        sandbox.value = '';
+    } else {
+        console.error("Error pasting client clipboard");
+    }
+}
+
+/**
  * Show notification when new content is received
  * @param content
  */
@@ -66,6 +95,51 @@ function showNewContentNotification(content) {
     chrome.notifications.create(NEW_NOTIFICATION_ID, options);
 }
 
+/**
+ * Save the given content to the sync clipboard
+ * @param content Content to save
+ * @param callback
+ */
+function saveClipboard(content, callback) {
+    console.log("Saving clipboard content");
+    // Get unique client id to mark who sent the clipboard
+    chrome.instanceID.getID(function(id) {
+        if (chrome.runtime.lastError) {
+            console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
+            return;
+        }
+        // Get list of saved clipboard ids
+        getClipboardIds(function (ids) {
+            var nextId = 1;
+            if (ids.length > 0) {
+                nextId = ids[ids.length - 1] + 1;
+            }
+            ids.push(nextId);
+            // If clipboard is full, remove oldest
+            if (ids.length > HISTORY_SIZE) {
+                removeClipboardWithId(ids.shift());
+            }
+            // Save new clipboard
+            var clipboard = {};
+            clipboard[CLIPBOARD_PREFIX + nextId] = {
+                content: content,
+                from: id
+            };
+            chrome.storage.sync.set(clipboard, function () {
+                if (chrome.runtime.lastError) {
+                    console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
+                    return;
+                }
+                // Save new clipboard ids
+                saveClipboardIds(ids, function () {
+                    loadHistory(function () {
+                        callback();
+                    });
+                });
+            });
+        });
+    });
+}
 
 /**
  * Listen for storage changes

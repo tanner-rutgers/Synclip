@@ -64,7 +64,3 @@ button {
 .btn-primary.btn-outline:hover {
     color: #fff;
 }
-#sandbox {
-    position: absolute;
-    left: -2000px;
-}

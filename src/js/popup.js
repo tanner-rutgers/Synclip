@@ -1,18 +1,4 @@
-var CLIPBOARD_PREFIX = "clipSync_clipboard_";
-var HISTORY_SIZE = 5;
-
 var selectedHistory;
-
-function log(message) {
-    chrome.runtime.getBackgroundPage(function(backgroundPage) {
-        backgroundPage.console.log(message);
-    });
-}
-function error(message) {
-    chrome.runtime.getBackgroundPage(function(backgroundPage) {
-        backgroundPage.console.error(message);
-    });
-}
 
 /**
  * Saves given content to file sync
@@ -20,51 +6,13 @@ function error(message) {
  */
 function sendClipboard() {
     var content = document.getElementById("clipboard").textContent;
-    log("Saving clipboard content");
-    // Get unique client id to mark who sent the clipboard
-    chrome.instanceID.getID(function(id) {
-        if (chrome.runtime.lastError) {
-            error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
-            return;
-        }
-        // Get list of saved clipboard ids
-        chrome.runtime.getBackgroundPage(function(backgroundPage) {
-            backgroundPage.getClipboardIds(function (ids) {
-                var nextId = 1;
-                if (ids.length > 0) {
-                    nextId = ids[ids.length - 1] + 1;
-                }
-                ids.push(nextId);
-                // If clipboard is full, remove oldest
-                if (ids.length > HISTORY_SIZE) {
-                    backgroundPage.removeClipboardWithId(ids.shift());
-                }
-                // Save new clipboard
-                var clipboard = {};
-                clipboard[CLIPBOARD_PREFIX + nextId] = {
-                    content: content,
-                    from: id
-                };
-                log("Saving clipboard " + (CLIPBOARD_PREFIX + nextId));
-                chrome.storage.sync.set(clipboard, function () {
-                    if (chrome.runtime.lastError) {
-                        error("Error saving clipboard content: " + chrome.runtime.lastError.message);
-                        return;
-                    }
-                    // Notify that we saved.
-                    log('Saved clipboard with id: ' + nextId);
-                    // Save new clipboard ids
-                    backgroundPage.saveClipboardIds(ids, function () {
-                        backgroundPage.loadHistory(function () {
-                            showHistory(function() {
-                                loadCarousel();
-                            });
-                        });
-                    });
-                });
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        backgroundPage.saveClipboard(content, function() {
+            showHistory(function() {
+                loadCarousel();
             });
         });
-    });
+    })
 }
 
 /**
@@ -72,28 +20,11 @@ function sendClipboard() {
  * @param callback Callback function to accept retrieved content
  */
 function showClientClipboard() {
-    log("Retrieving and showing content from client clipboard");
-    var sandbox = document.getElementById("sandbox");
-    var result = '';
-    sandbox.select();
-    if (document.execCommand("paste")) {
-        chrome.runtime.getBackgroundPage(function(backgroundPage) {
-            result = sandbox.value;
-            var lastText = backgroundPage.lastTextContent;
-            if (result && result.length > 0) {
-                log("Retrieved data from client clipboard: " + result);
-                populateClipboardUI(result);
-            } else if (lastText && lastText.length > 0) {
-                log("Retrieved last copied text from history: " + lastText);
-                populateClipboardUI(lastText);
-            } else {
-                log("No text in clipboard or history");
-            }
-        });
-    } else {
-        error("Error pasting client clipboard");
-    }
-    sandbox.value = '';
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+       backgroundPage.getClientClipboard(function(content) {
+           populateClipboardUI(content);
+       });
+    });
 }
 
 /**
@@ -101,19 +32,14 @@ function showClientClipboard() {
  * @param value Value to populate
  */
 function populateClipboardUI(value) {
-    log("Populating clipboard UI with: " + value);
     document.getElementById('clipboard').textContent = value;
     document.getElementById('sync').style.display = "block";
-    chrome.runtime.getBackgroundPage(function(backgroundPage) {
-       backgroundPage.lastTextContent = value;
-    });
 }
 
 /**
  * Retrieves and shows clipboard history
  */
 function showHistory(callback) {
-    log("Retrieving and showing clipboard history");
     var ul = document.getElementById("historyList");
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
         var history = backgroundPage.getLoadedHistory();
@@ -193,7 +119,6 @@ function loadCarousel() {
  * Perfom initialization once popup is loaded
  */
 document.addEventListener('DOMContentLoaded', function() {
-    log("Extension activated");
     // Add submit listener to clipboard sync
     document.getElementById("clipboardForm").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -225,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
  * Repopulate clipboard element on new copy
  */
 document.addEventListener('copy', function() {
-    log("Showing current selection");
     var selected = window.getSelection().toString();
     populateClipboardUI(selected);
 });
