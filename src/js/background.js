@@ -3,6 +3,7 @@ var DEBUG = true;
 var NEW_NOTIFICATION_ID = "clipSync_notification_new";
 var IDS_KEY = "clipSync_ids";
 
+var lastTextContent;
 var currentContent;
 var clipboardHistory = [];
 
@@ -30,7 +31,6 @@ function loadHistory(callback) {
  */
 function getLoadedHistory() {
     console.log("Sharing loaded clipboardHistory");
-    console.log(clipboardHistory);
     return clipboardHistory;
 }
 

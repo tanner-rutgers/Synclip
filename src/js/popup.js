@@ -77,11 +77,19 @@ function showClientClipboard() {
     var result = '';
     sandbox.select();
     if (document.execCommand("paste")) {
-        result = sandbox.value;
-        if (result && result.length > 0) {
-            populateClipboardUI(result);
-            log("Retrieved data from client clipboard: " + result);
-        }
+        chrome.runtime.getBackgroundPage(function(backgroundPage) {
+            result = sandbox.value;
+            var lastText = backgroundPage.lastTextContent;
+            if (result && result.length > 0) {
+                log("Retrieved data from client clipboard: " + result);
+                populateClipboardUI(result);
+            } else if (lastText && lastText.length > 0) {
+                log("Retrieved last copied text from history: " + lastText);
+                populateClipboardUI(lastText);
+            } else {
+                log("No text in clipboard or history");
+            }
+        });
     } else {
         error("Error pasting client clipboard");
     }
@@ -96,6 +104,9 @@ function populateClipboardUI(value) {
     log("Populating clipboard UI with: " + value);
     document.getElementById('clipboard').textContent = value;
     document.getElementById('sync').style.display = "block";
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+       backgroundPage.lastTextContent = value;
+    });
 }
 
 /**
