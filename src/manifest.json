@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "ClipSync",
-  "description": "This extension allows sending text in your clipboard to other Chrome instances",
+  "name": "Synclip",
+  "description": "This extension allows syncing text in your clipboard between Chrome instances",
   "version": "1.0",
 
   "browser_action": {
@@ -10,7 +10,7 @@
       "19": "resources/icon19.png",
       "38": "resources/icon38.png"
     },
-    "name": "Click to publish clipboard",
+    "default_title": "Synclip",
     "default_popup": "pages/popup.html"
   },
 

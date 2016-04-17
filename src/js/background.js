@@ -1,8 +1,8 @@
 var DEBUG = true;
 
-var NEW_NOTIFICATION_ID = "clipSync_notification_new";
-var IDS_KEY = "clipSync_ids";
-var CLIPBOARD_PREFIX = "clipSync_clipboard_";
+var NEW_NOTIFICATION_ID = "synclip_notification_new";
+var IDS_KEY = "synclip_ids";
+var CLIPBOARD_PREFIX = "synclip_clipboard_";
 var HISTORY_SIZE = 5;
 
 var lastTextContent;
@@ -87,7 +87,7 @@ function showNewContentNotification(content) {
     console.log("Showing new content notification");
     var options = {
         type: "basic",
-        title: "ClipSync",
+        title: "Synclip",
         message: content,
         iconUrl: "../resources/icon80.png",
         buttons: [{title: "Copy"}, {title: "Dismiss"}]

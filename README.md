@@ -1,2 +1,2 @@
-# ClipSync
+# Synclip
 Clipboard sync chrome extension

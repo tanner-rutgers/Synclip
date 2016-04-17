@@ -1,5 +1,5 @@
-var CLIPBOARD_PREFIX = "clipSync_clipboard_";
-var IDS_KEY = "clipSync_ids";
+var CLIPBOARD_PREFIX = "synclip_clipboard_";
+var IDS_KEY = "synclip_ids";
 
 /**
  * Retrieves saved clipboard ids
