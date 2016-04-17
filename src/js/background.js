@@ -142,7 +142,7 @@ function saveClipboard(content, callback) {
 }
 
 /**
- * Listen for storage changes
+ * Listen for and handle storage changes
  */
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     console.log("Storage change detected: " + changes);
@@ -169,7 +169,7 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
 });
 
 /**
- * Listen for notification button events
+ * Listen for and handle notification button events
  */
 chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex) {
     if (notificationId === NEW_NOTIFICATION_ID) {
@@ -180,4 +180,37 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, button
     }
 });
 
-loadHistory();
+/**
+ * Enable/disable functionality based on signed in status
+ */
+chrome.identity.getProfileUserInfo(function(userInfo) {
+    console.log("Checking if user signed in...");
+    if (userInfo.email && userInfo.email.length > 0) {
+        console.log("User signed in, enabling popup");
+        chrome.browserAction.setPopup({popup: "pages/popup.html"});
+        chrome.browserAction.setIcon({
+            "path": {
+                "19": "../resources/icon19.png",
+                "38": "../resources/icon38.png"
+            }
+        });
+        loadHistory();
+    } else {
+        console.log("User not signed in, disabling popup");
+        chrome.browserAction.setPopup({popup: "pages/disabled.html"});
+        chrome.browserAction.setIcon({
+            "path": {
+                "19": "../resources/icon19_disabled.png",
+                "38": "../resources/icon38_disabled.png"
+            }
+        });
+    }
+});
+
+/**
+ * Listen for sign in changes and reload extension
+ */
+chrome.identity.onSignInChanged.addListener(function(account, signedIn) {
+    console.log("Sign in change detected, reloading extension");
+    chrome.runtime.reload();
+});
