@@ -19,10 +19,13 @@
 
     <div class="tab-content">
         <div id="clipboardTab" class="tab-pane fade in active">
-            <div class="panel panel-default box">
+            <div id="clipboardPanel" class="panel panel-default box">
                 <div class="panel-body">
                     <p id="clipboard" class="content">No text in clipboard...</p>
                 </div>
+            </div>
+            <div id="error" class="alert alert-danger" syle="display: none">
+                <p id="errorMessage"></p> <a href="help.html">(Why?)</a>
             </div>
             <div id="sync" style="display: none">
                 <form id="clipboardForm">

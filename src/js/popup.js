@@ -1,5 +1,15 @@
 var selectedHistory;
 
+function showError(message) {
+    document.getElementById("error").style.display = "block";
+    document.getElementById("errorMessage").textContent = message;
+}
+
+function resetError() {
+    document.getElementById("errorMessage").textContent = "";
+    document.getElementById("error").style.display = "none";
+}
+
 /**
  * Saves given content to file sync
  * @param content String content to publish
@@ -7,10 +17,15 @@ var selectedHistory;
 function sendClipboard() {
     var content = document.getElementById("clipboard").textContent;
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
-        backgroundPage.saveClipboard(content, function() {
-            showHistory(function() {
-                loadCarousel();
-            });
+        backgroundPage.saveClipboard(content, function(error) {
+            if (error) {
+                showError("Error syncing clipboard");
+            } else {
+                resetError();
+                showHistory(function () {
+                    loadCarousel();
+                });
+            }
         });
     })
 }
@@ -34,6 +49,7 @@ function showClientClipboard() {
 function populateClipboardUI(value) {
     document.getElementById('clipboard').textContent = value;
     document.getElementById('sync').style.display = "block";
+    resetError();
 }
 
 /**
@@ -144,6 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
     showHistory(function() {
         loadCarousel();
     });
+    // Reset error message
+    resetError();
 });
 
 /**

@@ -68,3 +68,8 @@ button {
 .disabled {
     width: 300px;
 }
+#errorMessage {
+    color: red;
+    display: inline;
+    padding-bottom: 20px;
+}

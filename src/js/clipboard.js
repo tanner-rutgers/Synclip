@@ -22,10 +22,6 @@ function saveNewClipboard(content, callback) {
                 nextId = ids[ids.length - 1] + 1;
             }
             ids.push(nextId);
-            // If clipboard is full, remove oldest
-            if (ids.length > HISTORY_SIZE) {
-                removeClipboardWithId(ids.shift());
-            }
             // Save new clipboard
             var clipboard = {};
             clipboard[CLIPBOARD_PREFIX + nextId] = {
@@ -35,7 +31,11 @@ function saveNewClipboard(content, callback) {
             chrome.storage.sync.set(clipboard, function () {
                 if (chrome.runtime.lastError) {
                     console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
-                    return;
+                    return callback(chrome.runtime.lastError);
+                }
+                // If clipboard is full, remove oldest
+                if (ids.length > HISTORY_SIZE) {
+                    removeClipboardWithId(ids.shift());
                 }
                 // Save new clipboard ids
                 saveClipboardIds(ids, callback);
@@ -70,7 +70,7 @@ function saveClipboardIds(ids, callback) {
     chrome.storage.sync.set(idsToSave, function() {
         if (chrome.runtime.lastError) {
             console.error("Error saving clipboard ids: " + chrome.runtime.lastError.message);
-            return;
+            callback(chrome.runtime.lastError);
         }
         callback();
     })

@@ -62,11 +62,9 @@ function getClientClipboard(callback) {
     if (document.execCommand("paste")) {
         result = sandbox.value;
         if (result && result.length > 0) {
-            console.log("Retrieved data from client clipboard: " + result);
             lastTextContent = result;
             callback(result);
         } else if (lastTextContent && lastTextContent.length > 0) {
-            console.log("Retrieved last copied text from history: " + lastTextContent);
             callback(lastTextContent);
         } else {
             console.log("No text in clipboard or history");
@@ -100,7 +98,10 @@ function showNewContentNotification(content) {
  */
 function saveClipboard(content, callback) {
     console.log("Saving clipboard");
-    saveNewClipboard(content, function() {
+    saveNewClipboard(content, function(error) {
+        if (error) {
+            return callback(error);
+        }
         loadHistory(callback);
     });
 }
