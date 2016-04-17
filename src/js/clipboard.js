@@ -1,5 +1,48 @@
 var CLIPBOARD_PREFIX = "synclip_clipboard_";
 var IDS_KEY = "synclip_ids";
+var HISTORY_SIZE = 5;
+
+/**
+ * Save the given content to the sync clipboard
+ * @param content Content to save
+ * @param callback
+ */
+function saveNewClipboard(content, callback) {
+    console.log("Saving new clipboard");
+    // Get unique client id to mark who sent the clipboard
+    chrome.instanceID.getID(function(id) {
+        if (chrome.runtime.lastError) {
+            console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
+            return;
+        }
+        // Get list of saved clipboard ids
+        getClipboardIds(function (ids) {
+            var nextId = 1;
+            if (ids.length > 0) {
+                nextId = ids[ids.length - 1] + 1;
+            }
+            ids.push(nextId);
+            // If clipboard is full, remove oldest
+            if (ids.length > HISTORY_SIZE) {
+                removeClipboardWithId(ids.shift());
+            }
+            // Save new clipboard
+            var clipboard = {};
+            clipboard[CLIPBOARD_PREFIX + nextId] = {
+                content: content,
+                from: id
+            };
+            chrome.storage.sync.set(clipboard, function () {
+                if (chrome.runtime.lastError) {
+                    console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
+                    return;
+                }
+                // Save new clipboard ids
+                saveClipboardIds(ids, callback);
+            });
+        });
+    });
+}
 
 /**
  * Retrieves saved clipboard ids

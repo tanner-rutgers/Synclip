@@ -2,8 +2,6 @@ var DEBUG = true;
 
 var NEW_NOTIFICATION_ID = "synclip_notification_new";
 var IDS_KEY = "synclip_ids";
-var CLIPBOARD_PREFIX = "synclip_clipboard_";
-var HISTORY_SIZE = 5;
 
 var lastTextContent;
 var currentContent;
@@ -96,48 +94,14 @@ function showNewContentNotification(content) {
 }
 
 /**
- * Save the given content to the sync clipboard
+ * Save the given content and reload history
  * @param content Content to save
  * @param callback
  */
 function saveClipboard(content, callback) {
-    console.log("Saving clipboard content");
-    // Get unique client id to mark who sent the clipboard
-    chrome.instanceID.getID(function(id) {
-        if (chrome.runtime.lastError) {
-            console.error("Error retrieving instanceID: " + chrome.runtime.lastError.message);
-            return;
-        }
-        // Get list of saved clipboard ids
-        getClipboardIds(function (ids) {
-            var nextId = 1;
-            if (ids.length > 0) {
-                nextId = ids[ids.length - 1] + 1;
-            }
-            ids.push(nextId);
-            // If clipboard is full, remove oldest
-            if (ids.length > HISTORY_SIZE) {
-                removeClipboardWithId(ids.shift());
-            }
-            // Save new clipboard
-            var clipboard = {};
-            clipboard[CLIPBOARD_PREFIX + nextId] = {
-                content: content,
-                from: id
-            };
-            chrome.storage.sync.set(clipboard, function () {
-                if (chrome.runtime.lastError) {
-                    console.error("Error saving clipboard content: " + chrome.runtime.lastError.message);
-                    return;
-                }
-                // Save new clipboard ids
-                saveClipboardIds(ids, function () {
-                    loadHistory(function () {
-                        callback();
-                    });
-                });
-            });
-        });
+    console.log("Saving clipboard");
+    saveNewClipboard(content, function() {
+        loadHistory(callback);
     });
 }
 
