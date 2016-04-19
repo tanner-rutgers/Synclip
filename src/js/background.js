@@ -124,7 +124,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
                 if (DEBUG || id !== clipboard.from) {
                     console.log("Content is from other client");
                     currentContent = clipboard.content;
-                    showNewContentNotification(clipboard.content);
+                    loadHistory(function() {
+                        showNewContentNotification(clipboard.content);
+                    });
                 } else {
                     console.log("Content is from us, no action taken");
                 }
