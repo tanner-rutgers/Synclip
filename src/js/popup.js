@@ -148,6 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
             populateClipboardUI(selectedHistory);
         });
     });
+    // Add click listener to help links
+    var helpLinks = document.querySelectorAll(".help");
+    for (var i = 0; i < helpLinks.length; i++) {
+        helpLinks[i].addEventListener("onclick", function(event) {
+            event.preventDefault();
+            chrome.tabs.create({url: "../pages/synclip.html#support"});
+        });
+    }
     // Prevent buttons from keeping focus
     var buttons = document.getElementsByClassName("btn");
     for (var i = 0; i < buttons.length; i++) {

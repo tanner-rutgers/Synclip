@@ -3,59 +3,65 @@
 
 <head>
     <title>Synclip</title>
-    <script src="../js/jquery-1.12.3.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/popup.js"></script>
+
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/popup.css">
 </head>
 
 <body>
-<div class="container">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#clipboardTab">Clipboard</a></li>
-        <li><a data-toggle="tab" href="#historyTab">History</a></li>
-    </ul>
 
+<nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+    <a class="navbar-brand" href="#" tabindex="-1">Synclip</a>
+    <ul class="nav navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" data-toggle="tab" href="#clipboardTab">Clipboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#historyTab">History</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container">
     <div class="tab-content">
         <div id="clipboardTab" class="tab-pane fade in active">
-            <div id="clipboardPanel" class="panel panel-default box">
-                <div class="panel-body">
+            <div id="clipboardPanel" class="card box">
+                <div class="card-block">
                     <p id="clipboard" class="content">No text in clipboard...</p>
                 </div>
             </div>
             <div id="error" class="alert alert-danger" syle="display: none">
-                <p id="errorMessage"></p> <a href="help.html">(Why?)</a>
+                <p id="errorMessage"></p> <a class="help" href="#">(Why?)</a>
             </div>
             <div id="sync" style="display: none">
                 <form id="clipboardForm">
-                    <input type="submit" value="Sync" class="btn btn-primary btn-outline"/>
+                    <input type="submit" value="Sync" class="btn btn-secondary"/>
                 </form>
             </div>
         </div>
         <div id="historyTab" class="tab-pane fade">
             <div id="noHistory">
-                <div class="panel panel-default box">
-                    <div class="panel-body">
+                <div class="card box">
+                    <div class="card-block">
                         <p class="content">No History...</p>
                     </div>
                 </div>
             </div>
             <div id="history" style="display: none">
-                <div id="carousel" class="panel panel-default box">
-                    <div class="panel-body">
+                <div id="carousel" class="card box">
+                    <div class="card-block">
                         <ul id="historyList" class="content">
                         </ul>
                     </div>
                 </div>
                 <div id="buttons">
-                    <button id="prev" class="btn btn-primary btn-outline" disabled>
+                    <button id="prev" class="btn btn-secondary" disabled>
                         &lt;
                     </button>
                     <form id="historyForm" style="display: inline-block">
-                        <input type="submit" value="Copy" class="btn btn-primary btn-outline"/>
+                        <input type="submit" value="Copy" class="btn btn-secondary"/>
                     </form>
-                    <button id="next" class="btn btn-primary btn-outline" disabled>
+                    <button id="next" class="btn btn-secondary" disabled>
                         &gt;
                     </button>
                 </div>
@@ -63,6 +69,18 @@
         </div>
     </div>
 </div>
+
+<footer class="footer bg-inverse">
+    <div class="container">
+        <span class="text-muted left">&copy; 2016 Synclip</span>
+        <span class="right"><a class="text-muted help" href="#">Help</a></span>
+    </div>
+</footer>
+
+<script src="../js/jquery-1.12.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/popup.js"></script>
+
 </body>
 
 </html>
