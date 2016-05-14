@@ -22,9 +22,7 @@ function sendClipboard() {
                 showError("Error syncing clipboard");
             } else {
                 resetError();
-                showHistory(function () {
-                    loadCarousel();
-                });
+                showHistory();
             }
         });
     })
@@ -55,7 +53,7 @@ function populateClipboardUI(value) {
 /**
  * Retrieves and shows clipboard history
  */
-function showHistory(callback) {
+function showHistory() {
     console.log("showHistory called");
     var ul = document.getElementById("historyList");
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
@@ -78,7 +76,7 @@ function showHistory(callback) {
                     ul.appendChild(li);
                 }
             }
-            callback();
+            loadCarousel();
         });
     });
 }
@@ -164,6 +162,10 @@ document.addEventListener('DOMContentLoaded', function() {
             populateClipboardUI(selectedHistory);
         });
     });
+    // Add click listener to history tab
+    document.getElementById("historyTabLink").addEventListener("click", function(event) {
+       showHistory();
+    });
     // Add click listener to help links
     var helpLinks = document.querySelectorAll(".help");
     for (var i = 0; i < helpLinks.length; i++) {
@@ -176,9 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("clearHistoryLink").addEventListener("click", function(event) {
         event.preventDefault();
         clearHistory(function() {
-            showHistory(function () {
-                loadCarousel();
-            });
+            showHistory();
         });
     });
     // Prevent buttons from keeping focus
@@ -190,9 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // Populate content
     showClientClipboard();
-    showHistory(function() {
-        loadCarousel();
-    });
+    showHistory();
     // Reset error message
     resetError();
 });
