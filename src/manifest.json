@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Synclip",
-  "description": "This extension allows syncing text in your clipboard between Chrome instances",
+  "description": "Easily sync text in your clipboard between multiple PCs",
   "version": "1.0.0",
 
   "browser_action": {
