@@ -121,11 +121,11 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
             var clipboardIds = change.newValue;
             var newClipboardId = clipboardIds[clipboardIds.length - 1];
             getClipboard(newClipboardId, function(clipboard) {
-                if (DEBUG || id !== clipboard.from) {
+                if (DEBUG || id !== clipboard.f) {
                     console.log("Content is from other client");
-                    currentContent = clipboard.content;
+                    currentContent = clipboard.c;
                     loadHistory(function() {
-                        showNewContentNotification(clipboard.content);
+                        showNewContentNotification(clipboard.c);
                     });
                 } else {
                     console.log("Content is from us, no action taken");
@@ -180,4 +180,16 @@ chrome.identity.getProfileUserInfo(function(userInfo) {
 chrome.identity.onSignInChanged.addListener(function(account, signedIn) {
     console.log("Sign in change detected, reloading extension");
     chrome.runtime.reload();
+});
+
+/**
+ * Launch synclip tab on install or update
+ */
+chrome.runtime.onInstalled.addListener(function(details) {
+    console.log("Install or update detected, possibly launching Synclip page");
+    if (details.reason === "install") {
+        chrome.tabs.create({url: "../pages/synclip.html#home"});
+    } else if (details.reason === "update") {
+        chrome.tabs.create({url: "../pages/synclip.html#releaseNotes"});
+    }
 });

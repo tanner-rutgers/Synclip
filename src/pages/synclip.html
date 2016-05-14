@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Synclip chrome extension home page">
+    <meta name="author" content="Tanner Rutgers">
+    <link rel="icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <title>Synclip</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/synclip.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="site-wrapper">
+
+    <div class="site-wrapper-inner">
+
+        <div class="header-cont">
+            <div class="top-shadow">
+                <div class="left-shadow">
+                    <div class="right-shadow">
+                        <div class="header">
+                            <div class="masthead clearfix">
+                                <div class="inner">
+                                    <h3 class="masthead-brand">Synclip</h3>
+                                    <nav class="nav nav-masthead">
+                                        <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
+                                        <a class="nav-link" data-toggle="tab" href="#userGuide">User Guide</a>
+                                        <a class="nav-link" data-toggle="tab" href="#releaseNotes">Release Notes</a>
+                                        <a class="nav-link" data-toggle="tab" href="#support">Support</a>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="cover-container wide">
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <div class="inner cover">
+                        <h1 class="cover-heading">Start Syncing!</h1>
+                        <br>
+                        <p class="lead">Synclip allows you to sync your clipboard to any computer running Chrome.
+                            It also stores history of previously shared clipboards!</p>
+                        <a href="#userGuide" class="btn btn-lg btn-secondary tab-link">Get started</a>
+                    </div>
+                </div>
+                <div id="userGuide" class="tab-pane fade">
+                    <h1>User Guide</h1>
+                    <br>
+                    <p>
+                        Synclip allows you to sync your clipboard text between any computers running Chrome. Simply copy
+                        text to your clipboard, click "Sync" on the extension popup, and immediately get notified on all
+                        other computers where you're signed in and have the extension installed. The text can then be
+                        easily copied from the notification. Synclip also stores a history of previously shared clipboards!
+                    </p>
+                    <p>
+                        Synclip is designed to be very simple and ready to use, but just in case, here's a step-by-step guide.
+                    </p>
+                    <br><br>
+                    <!-- -->
+                    <div id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="prerequisites">
+                                <h4 class="card-title">
+                                    <a class="card-link" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Prerequisites
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="card-block collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="prerequisites">
+                                <ol>
+                                    <li>
+                                        Make sure you're signed in to Chrome
+                                        <ul class="list-unstyled">
+                                            <li></li>
+                                            <li>
+                                                In order for Synclip to work, you must be signed in to Chrome on
+                                                the device you want to share your clipboard from, and any device you want to share your clipboard
+                                                to. For details on signing in to Chrome
+                                                <a href="https://support.google.com/chrome/answer/185277?hl=en">click here</a>.
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Sync your extensions
+                                        <ul class="list-unstyled">
+                                            <li></li>
+                                            <li>
+                                                Synclip uses extension sync storage to sync your clipboard. This means you must have
+                                                extension synchronization enabled in Chrome.
+                                                <ol>
+                                                    <li>
+                                                        In the top-right corner of the screen, click the Chrome menu
+                                                        <img alt="chrome menu" src="../resources/stack.png">
+                                                    </li>
+                                                    <li>
+                                                        Click <b>Settings.</b>
+                                                    </li>
+                                                    <li>
+                                                        Under "Sign In," click <b>Advanced sync settings.</b>
+                                                    </li>
+                                                    <ul>
+                                                        <li>
+                                                            To sync all data, select <b>Sync everything</b> from the dropdown.
+                                                        </li>
+                                                        <li>
+                                                            To sync only your extensions (required), select <b>Choose what to sync</b>
+                                                            from the dropdown, then check the checkbox next to <b>Extensions.</b>
+                                                        </li>
+                                                    </ul>
+                                                    <li>
+                                                        Click <b>OK.</b>
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="syncingClipboard">
+                                <h4 class="card-title">
+                                    <a class="card-link" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Syncing clipboard
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="card-block collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="syncingClipboard">
+                                <ol>
+                                    <li>Click the Synclip extension icon <img alt="synclip icon" src="../resources/icon16.png"></li>
+                                    <li>Your current clipboard content is shown in the clipboard window. To sync, simply click the <b>Sync</b> button.</li>
+                                    <li>All other computers signed into the same user profile on Chrome should immediately show a notification with the
+                                        synced content ready to copy.
+                                        <ul>
+                                            <li>Simply click <b>Copy</b> on the notification to copy the content to the clipboard on that computer.</li>
+                                            <li>You can also choose to dismiss the notification by clicking the <b>Dismiss</b> button (don't worry, the content
+                                                will be available in your history for you to copy later).</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" role="tab" id="viewingHistory">
+                                <h4 class="card-title">
+                                    <a class="card-link" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Viewing history
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="card-block collapse" data-parent="#accordion" role="tabpanel" aria-labelledby="viewingHistory">
+                                <p>Synclip stores a history of your last 5 synchronized clipboards in the History tab.</p>
+                                <ol>
+                                    <li>Click the Synclip extension icon <img alt="synclip icon" src="../resources/icon16.png"></li>
+                                    <li>Click <b>History</b> at the top right of the popup.</li>
+                                    <li>Your most recent clipboard is shown in the clipboard window. You can navigate between previous clipboards
+                                    using the arrow buttons at the bottom of the popup.</li>
+                                    <li>To copy content from the history into your clipboard, simply click <b>Copy</b> when the content you want to copy
+                                        is in the history clipboard window.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="releaseNotes" class="tab-pane fade">
+                    <h1>Release Notes</h1>
+                    <br>
+                    <p>Visit this page for a comprehensive list of features and bug fixes as they are released.</p>
+                    <p>Feel free to view the <a target="_blank" href="https://github.com/tannner/Synclip">GitHub repository</a>
+                        to explore the code in detail, raise issues, or even contribute! Suggestions for improvements are more than welcome!</p>
+                    <br>
+                    <br>
+                    <h3>Version 1.0.0 - Initial Release</h3>
+                    <p><b>Features</b></p>
+                    <ul>
+                        <li>Sync clipboard between instances of Chrome on PC</li>
+                        <li>Notifications with ability to copy or dismiss</li>
+                        <li>Persistent history of most recent 5 clipboard syncs</li>
+                        <li>Support web page with user guide, release notes, and support</li>
+                    </ul>
+                </div>
+                <div id="support" class="tab-pane fade">
+                    <h1>Support</h1>
+                    <br>
+                    <p>Please see the <a target="_blank" href="https://chrome.google.com/webstore/detail/synclip/daohegnfaepmojhhjpbcefijcgneapdf/support">extension support</a>
+                        page or the <a target="_blank" href="https://github.com/tannner/Synclip/issues">GitHub repository</a> to submit questions or issues with the extension,
+                        or to view questions or issues raised by other users. I will try to address all issues raised within a timely manner.</p>
+                    <p>Please also see below for some common issues.</p>
+                    <br>
+                    <h3>General sync issues</h3>
+                    <p>If you're not receiving notifications on other PCs after syncing, your clipboard history isn't viewable, or the popup appears disabled, please
+                        visit the <a href="#userGuide" class="tab-link">User Guide</a> to ensure you've completed the necessary prerequisites and are using the extension properly.</p>
+                    <br>
+                    <h3>Error message when syncing</h3>
+                    <p>If you see the error message <b>Error syncing clipboard</b>, you have likely exceeded one of the following limitations of chrome sync storage,
+                        the mechanism that Synclip uses to sync clipboards:</p>
+                    <ul>
+                        <li>Each clipboard has a maximum storage size of <b>8162</b> characters. Try syncing a smaller clipboard if you suspect this is the issue.</li>
+                        <li>Chrome sync storage is limited to <b>1800 operations per hour</b> or <b>120 operations per minute</b>. Synclip may use multiple operations per
+                            sync. Try waiting a few seconds or minutes if you suspect this is the issue.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="cover-container">
+
+            <div class="footer-cont">
+                <div class="bottom-shadow">
+                    <div class="left-shadow">
+                        <div class="right-shadow">
+                            <div class="footer">
+                                <div class="mastfoot">
+                                    <div class="inner">
+                                        <p>&copy; 2016 Tanner Rutgers, <a target="_blank" href="https://github.com/tannner/Synclip">source code</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/jquery-2.2.3.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/synclip.js"></script>
+
+</body>
+</html>

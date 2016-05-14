@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add click listener to help links
     var helpLinks = document.querySelectorAll(".help");
     for (var i = 0; i < helpLinks.length; i++) {
-        helpLinks[i].addEventListener("onclick", function(event) {
+        helpLinks[i].addEventListener("click", function(event) {
             event.preventDefault();
             chrome.tabs.create({url: "../pages/synclip.html#support"});
         });
