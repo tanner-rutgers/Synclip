@@ -68,7 +68,7 @@ function showHistory(callback) {
             ul.innerHTML = '';
             for (var i = 0; i < history.length; i++) {
                 var li = document.createElement("li");
-                li.appendChild(document.createTextNode(history[i].content));
+                li.appendChild(document.createTextNode(history[i].c));
                 if (i == history.length - 1) {
                     li.classList.add('current');
                 }

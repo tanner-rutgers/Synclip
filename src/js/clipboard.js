@@ -1,4 +1,4 @@
-var CLIPBOARD_PREFIX = "synclip_clipboard_";
+var CLIPBOARD_PREFIX = "sc_";
 var IDS_KEY = "synclip_ids";
 var HISTORY_SIZE = 5;
 
@@ -25,8 +25,8 @@ function saveNewClipboard(content, callback) {
             // Save new clipboard
             var clipboard = {};
             clipboard[CLIPBOARD_PREFIX + nextId] = {
-                content: content,
-                from: id
+                c: content,
+                f: id
             };
             chrome.storage.sync.set(clipboard, function () {
                 if (chrome.runtime.lastError) {
