@@ -56,27 +56,43 @@ function populateClipboardUI(value) {
  * Retrieves and shows clipboard history
  */
 function showHistory(callback) {
+    console.log("showHistory called");
     var ul = document.getElementById("historyList");
     chrome.runtime.getBackgroundPage(function(backgroundPage) {
-        var history = backgroundPage.getLoadedHistory();
-        if (history.length <= 0) {
-            document.getElementById("noHistory").style.display = "block";
-            document.getElementById("history").style.display = "none";
-        } else {
-            document.getElementById("noHistory").style.display = "none";
-            document.getElementById("history").style.display = "block";
-            ul.innerHTML = '';
-            for (var i = 0; i < history.length; i++) {
-                var li = document.createElement("li");
-                li.appendChild(document.createTextNode(history[i].c));
-                if (i == history.length - 1) {
-                    li.classList.add('current');
+        backgroundPage.loadHistory(function(history) {
+            console.log("after background loadHistory");
+            console.log(history);
+            if (history.length <= 0) {
+                document.getElementById("noHistory").style.display = "block";
+                document.getElementById("history").style.display = "none";
+            } else {
+                document.getElementById("noHistory").style.display = "none";
+                document.getElementById("history").style.display = "block";
+                ul.innerHTML = '';
+                for (var i = 0; i < history.length; i++) {
+                    var li = document.createElement("li");
+                    li.appendChild(document.createTextNode(history[i].c));
+                    if (i == history.length - 1) {
+                        li.classList.add('current');
+                    }
+                    ul.appendChild(li);
                 }
-                ul.appendChild(li);
             }
-        }
-        callback();
+            callback();
+        });
     });
+}
+
+/**
+ * Clear history
+ * @param callback
+ */
+function clearHistory(callback) {
+    chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        backgroundPage.clearClipboard(function() {
+            callback();
+        });
+    })
 }
 
 /**
@@ -156,6 +172,15 @@ document.addEventListener('DOMContentLoaded', function() {
             chrome.tabs.create({url: "../pages/synclip.html#support"});
         });
     }
+    // Add click listener to clear history
+    document.getElementById("clearHistoryLink").addEventListener("click", function(event) {
+        event.preventDefault();
+        clearHistory(function() {
+            showHistory(function () {
+                loadCarousel();
+            });
+        });
+    });
     // Prevent buttons from keeping focus
     var buttons = document.getElementsByClassName("btn");
     for (var i = 0; i < buttons.length; i++) {

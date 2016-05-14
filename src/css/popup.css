@@ -2,9 +2,11 @@ body {
     text-align: center;
     padding-top: 60px;
 }
-a {
-    text-decoration: none;
-    outline: none;
+a,
+a:hover,
+a:focus,
+a:active {
+    color: #777;
 }
 .nav {
     float: right;
@@ -58,6 +60,15 @@ a {
     color: red;
     display: inline;
     padding-bottom: 20px;
+}
+#historyTab {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+#clearHistoryDiv {
+    font-size: small;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
 }
 .footer {
     font-size: small;

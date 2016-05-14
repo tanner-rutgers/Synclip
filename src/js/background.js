@@ -1,4 +1,4 @@
-var DEBUG = true;
+var DEBUG = false;
 
 var NEW_NOTIFICATION_ID = "synclip_notification_new";
 var IDS_KEY = "synclip_ids";
@@ -14,24 +14,19 @@ function loadHistory(callback) {
     console.log("Loading clipboard history");
     clipboardHistory = [];
     getClipboardIds(function(ids) {
-        ids.forEach(function(id, index) {
-            getClipboard(id, function(clipboard) {
-                clipboardHistory.push(clipboard);
-                if (index == ids.length - 1) {
-                    typeof callback === 'function' && callback();
-                }
+        if (ids && ids.length > 0) {
+            ids.forEach(function (id, index) {
+                getClipboard(id, function (clipboard) {
+                    clipboardHistory.push(clipboard);
+                    if (index == ids.length - 1) {
+                        typeof callback === 'function' && callback(clipboardHistory);
+                    }
+                });
             });
-        });
+        } else {
+            typeof callback === 'function' && callback(clipboardHistory);
+        }
     })
-}
-
-/**
- * Returns currently loaded clipboardHistory
- * @returns {Array} Array of clipboards
- */
-function getLoadedHistory() {
-    console.log("Sharing loaded clipboardHistory");
-    return clipboardHistory;
 }
 
 /**
@@ -102,7 +97,7 @@ function saveClipboard(content, callback) {
         if (error) {
             return callback(error);
         }
-        loadHistory(callback);
+        callback();
     });
 }
 
@@ -119,18 +114,22 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
             }
             var change = changes[IDS_KEY];
             var clipboardIds = change.newValue;
-            var newClipboardId = clipboardIds[clipboardIds.length - 1];
-            getClipboard(newClipboardId, function(clipboard) {
-                if (DEBUG || id !== clipboard.f) {
-                    console.log("Content is from other client");
-                    currentContent = clipboard.c;
-                    loadHistory(function() {
-                        showNewContentNotification(clipboard.c);
-                    });
-                } else {
-                    console.log("Content is from us, no action taken");
-                }
-            });
+            if (clipboardIds && clipboardIds.length > 0) {
+                var newClipboardId = clipboardIds[clipboardIds.length - 1];
+                getClipboard(newClipboardId, function (clipboard) {
+                    if (DEBUG || id !== clipboard.f) {
+                        console.log("Content is from other client");
+                        currentContent = clipboard.c;
+                        loadHistory(function () {
+                            showNewContentNotification(clipboard.c);
+                        });
+                    } else {
+                        console.log("Content is from us");
+                    }
+                });
+            } else {
+                loadHistory();
+            }
         });
     }
 });

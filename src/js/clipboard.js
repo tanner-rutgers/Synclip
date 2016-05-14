@@ -45,6 +45,23 @@ function saveNewClipboard(content, callback) {
 }
 
 /**
+ * Remove all saved clipboards and clipboard ids
+ * @param callback
+ */
+function clearClipboard(callback) {
+    getClipboardIds(function (ids) {
+        ids.forEach(function(id, index) {
+            removeClipboardWithId(id);
+            if (index == ids.length - 1) {
+                clearClipboardIds(function() {
+                    callback();
+                });
+            }
+        });
+    });
+}
+
+/**
  * Retrieves saved clipboard ids
  * @param callback Callback function to accept retrieved clipboard ids
  */
@@ -77,6 +94,18 @@ function saveClipboardIds(ids, callback) {
 }
 
 /**
+ * Clear saved clipboard ids
+ */
+function clearClipboardIds(callback) {
+    chrome.storage.sync.remove(IDS_KEY, function() {
+        if (chrome.runtime.lastError) {
+            console.error("Error clearing clipboard ids: " + chrome.runtime.lastError.message);
+        }
+        callback();
+    })
+}
+
+/**
  * Remove the clipboard with given id
  * @param id ID of clipboard to remove
  */
@@ -89,8 +118,8 @@ function removeClipboardWithId(id) {
 }
 
 /**
- *
- * @param id
+ * Retrieve the clipboard with the given id
+ * @param id ID of clipboard to retrieve
  * @param callback
  */
 function getClipboard(id, callback) {
