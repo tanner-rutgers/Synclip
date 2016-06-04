@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (var i = 0; i < helpLinks.length; i++) {
         helpLinks[i].addEventListener("click", function(event) {
             event.preventDefault();
-            chrome.tabs.create({url: "../pages/synclip.html#support"});
+            chrome.tabs.create({url: "http://synclip-app.com#support"});
         });
     }
     // Add click listener to clear history
