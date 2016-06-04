@@ -187,8 +187,8 @@ chrome.identity.onSignInChanged.addListener(function(account, signedIn) {
 chrome.runtime.onInstalled.addListener(function(details) {
     console.log("Install or update detected, possibly launching Synclip page");
     if (details.reason === "install") {
-        chrome.tabs.create({url: "../pages/synclip.html#home"});
+        chrome.tabs.create({url: "http://synclip-app.com#home"});
     } else if (details.reason === "update") {
-        chrome.tabs.create({url: "../pages/synclip.html#releaseNotes"});
+        chrome.tabs.create({url: "http://synclip-app.com#releaseNotes"});
     }
 });
