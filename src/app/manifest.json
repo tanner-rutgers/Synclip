@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+
+  "name": "Synclip",
+  "description": "Easily sync text in your clipboard between multiple PCs",
+  "version": "1.0.1",
+
+  "browser_action": {
+    "default_icon": {
+      "19": "resources/icon19.png",
+      "38": "resources/icon38.png"
+    },
+    "default_title": "Synclip",
+    "default_popup": "pages/popup.html"
+  },
+
+  "icons": {
+    "16": "resources/icon16.png",
+    "48": "resources/icon48.png",
+    "128": "resources/icon128.png"
+  },
+
+  "background": {
+    "page": "pages/background.html"
+  },
+
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "storage",
+    "notifications",
+    "gcm",
+    "background",
+    "identity",
+    "identity.email"
+  ]
+}
