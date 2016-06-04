@@ -3,7 +3,7 @@
 
   "name": "Synclip",
   "description": "Easily sync text in your clipboard between multiple PCs",
-  "version": "1.0.1",
+  "version": "1.0.2",
 
   "browser_action": {
     "default_icon": {
